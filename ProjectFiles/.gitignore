@@ -1,0 +1,4 @@
+.env
+*.pth
+*.pkl
+__pycache__/s

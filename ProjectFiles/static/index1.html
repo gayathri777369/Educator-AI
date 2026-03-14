@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EducatorAI - Educational Content Generator</title>
+    <link rel="stylesheet" href="C:/MySelf/static/style1.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>EducatorAI</h1>
+                </div>
+                <p class="tagline">Powered by IBM Granite - Generate Educational Content with AI</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Input Section -->
+            <section class="input-section">
+                <div class="form-container">
+                    <h2><i class="fas fa-lightbulb"></i> Generate Educational Content</h2>
+                    
+                    <form id="generateForm" class="generate-form">
+                        <!-- Content Type Selection -->
+                        <div class="form-group">
+                            <label for="contentType">
+                                <i class="fas fa-tags"></i> Content Type
+                            </label>
+                            <select id="contentType" name="contentType" required>
+                                <option value="explanation">Explanation</option>
+                                <option value="summary">Summary</option>
+                                <option value="quiz">Quiz</option>
+                                <option value="lesson">Lesson Plan</option>
+                                <option value="example">Examples</option>
+                                <option value="definition">Definition</option>
+                            </select>
+                        </div>
+
+                        <!-- Main Prompt -->
+                        <div class="form-group">
+                            <label for="prompt">
+                                <i class="fas fa-edit"></i> What would you like to learn about?
+                            </label>
+                            <textarea 
+                                id="prompt" 
+                                name="prompt" 
+                                placeholder="Enter your educational topic or question here..."
+                                required
+                                rows="4"
+                            ></textarea>
+                        </div>
+
+                        <!-- Context (Optional) -->
+                        <div class="form-group">
+                            <label for="context">
+                                <i class="fas fa-info-circle"></i> Additional Context (Optional)
+                            </label>
+                            <textarea 
+                                id="context" 
+                                name="context" 
+                                placeholder="Provide any additional context, target audience, or specific requirements..."
+                                rows="3"
+                            ></textarea>
+                        </div>
+
+                        <!-- Advanced Settings -->
+                        <div class="advanced-settings">
+                            <button type="button" id="toggleAdvanced" class="toggle-btn">
+                                <i class="fas fa-cog"></i> Advanced Settings
+                                <i class="fas fa-chevron-down toggle-icon"></i>
+                            </button>
+                            
+                            <div id="advancedPanel" class="advanced-panel">
+                                <div class="settings-grid">
+                                    <div class="form-group">
+                                        <label for="maxLength">
+                                            <i class="fas fa-ruler"></i> Max Length
+                                        </label>
+                                        <input 
+                                            type="range" 
+                                            id="maxLength" 
+                                            name="maxLength" 
+                                            min="50" 
+                                            max="1000" 
+                                            value="512"
+                                        >
+                                        <span id="maxLengthValue">512</span>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="temperature">
+                                            <i class="fas fa-thermometer-half"></i> Creativity
+                                        </label>
+                                        <input 
+                                            type="range" 
+                                            id="temperature" 
+                                            name="temperature" 
+                                            min="0.1" 
+                                            max="2.0" 
+                                            step="0.1" 
+                                            value="0.7"
+                                        >
+                                        <span id="temperatureValue">0.7</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" id="generateBtn" class="generate-btn">
+                            <i class="fas fa-magic"></i>
+                            <span>Generate Content</span>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Output Section -->
+            <section class="output-section">
+                <div class="output-container">
+                    <h2><i class="fas fa-book-open"></i> Generated Content</h2>
+                    
+                    <!-- Loading State -->
+                    <div id="loadingState" class="loading-state hidden">
+                        <div class="spinner"></div>
+                        <p>Generating educational content...</p>
+                        <small>This may take a few moments</small>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="emptyState" class="empty-state">
+                        <i class="fas fa-robot"></i>
+                        <h3>Ready to Generate Content</h3>
+                        <p>Enter your educational topic above and click "Generate Content" to get started.</p>
+                    </div>
+
+                    <!-- Result Display -->
+                    <div id="resultContainer" class="result-container hidden">
+                        <div class="result-header">
+                            <div class="result-meta">
+                                <span id="resultType" class="result-type"></span>
+                                <span id="resultTime" class="result-time"></span>
+                            </div>
+                            <div class="result-actions">
+                                <button id="copyBtn" class="action-btn" title="Copy to clipboard">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <button id="saveBtn" class="action-btn" title="Save as text file">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="result-content">
+                            <div id="generatedText" class="generated-text"></div>
+                        </div>
+                    </div>
+
+                    <!-- Error State -->
+                    <div id="errorState" class="error-state hidden">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Generation Failed</h3>
+                        <p id="errorMessage">An error occurred while generating content.</p>
+                        <button id="retryBtn" class="retry-btn">
+                            <i class="fas fa-redo"></i> Try Again
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2025 EducatorAI. Powered by IBM Granite Model.</p>
+                <div class="footer-links">
+                    <a href="#" id="aboutLink">About</a>
+                    <a href="#" id="helpLink">Help</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Content copied to clipboard!</span>
+    </div>
+
+    <script src="C:/MySelf/static/script.js"></script>
+</body>
+</html>
